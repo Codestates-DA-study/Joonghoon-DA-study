@@ -1,1 +1,1 @@
-# Joonghoon-DA-Study
+# SQL Study Note
