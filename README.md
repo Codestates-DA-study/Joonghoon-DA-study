@@ -28,7 +28,7 @@
 
 
 ### **커리큘럼 🗒**
-
+- 샘플 DB : https://www.postgresqltutorial.com/postgresql-sample-database/
 - Week 1 : https://www.notion.so/syh0397/1-8-02-8-06-a3582e329bd24e0e92937745571d5caa
 - Week 2 : https://www.notion.so/syh0397/2-8-09-8-13-fd21107ee48c449681d6b3d25ba48b4b
 - Week 3 : https://www.notion.so/syh0397/3-8-16-8-20-c0c309aacc054c97a05cf385463c0d2d
