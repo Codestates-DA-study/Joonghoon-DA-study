@@ -28,10 +28,25 @@ WHERE city.city = 'Lima';
 <br>
 
 문제4번) rental 정보에 추가로, 고객의 이름과, 직원의 이름을 함께 보여주세요.
-
-- 고객의 이름, 직원 이름은 이름과 성을 fullname 컬럼으로만들어서 직원이름/고객이름 2개의 컬럼으로 확인해주세요.
+- 고객의 이름, 직원 이름은 이름과 성을 fullname 컬럼으로 만들어서 직원이름/고객이름 2개의 컬럼으로 확인해주세요.
+~~~SQL
+SELECT rental.*, CONCAT(customer.first_name, ' ', customer.last_name) AS customer_fullname, CONCAT(staff.first_name, ' ', staff.last_name) AS staff_fullname
+FROM rental
+INNER JOIN customer ON rental.customer_id = customer.customer_id
+INNER JOIN staff ON rental.staff_id = staff.staff_id
+ORDER BY rental_id;
+~~~
+<br>
 
 문제5번) [seth.hannon@sakilacustomer.org](mailto:seth.hannon@sakilacustomer.org) 이메일 주소를 가진 고객의  주소 address, address2, postal_code, phone, city 주소를 알려주세요.
+~~~SQL
+SELECT a.address, a.address2, a.postal_code, a.phone, city.city
+FROM address a
+INNER JOIN city ON a.city_id = city.city_id
+INNER JOIN customer c ON a.address_id = c.address_id
+WHERE c.email = 'seth.hannon@sakilacustomer.org';
+~~~
+<br>
 
 문제6번) Jon Stephens 직원을 통해 dvd대여를 한 payment 기록 정보를  확인하려고 합니다.
 - payment_id,  고객 이름 과 성,  rental_id, amount, staff 이름과 성을 알려주세요.
