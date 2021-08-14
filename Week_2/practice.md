@@ -50,22 +50,104 @@ WHERE c.email = 'seth.hannon@sakilacustomer.org';
 
 문제6번) Jon Stephens 직원을 통해 dvd대여를 한 payment 기록 정보를  확인하려고 합니다.
 - payment_id,  고객 이름 과 성,  rental_id, amount, staff 이름과 성을 알려주세요.
+~~~SQL
+SELECT p.payment_id, c.first_name, c.last_name, p.rental_id, p.amount, s.first_name, s.last_name
+FROM payment p
+INNER JOIN customer c ON p.customer_id = c.customer_id
+INNER JOIN staff s ON p.staff_id = s.staff_id
+WHERE s.first_name = 'Jon'
+AND s.last_name = 'Stephens';
+~~~
+<br>
 
 문제7번) 배우가 출연하지 않는 영화의 film_id, title, release_year, rental_rate, length 를 알려주세요.
+~~~SQL
+SELECT f.film_id, f.title, f.release_year, f.rental_rate, f.length
+FROM film f
+LEFT OUTER JOIN film_actor fa ON f.film_id = fa.film_id
+WHERE fa.actor_id IS NULL;
+-- "배우가 출연하지 않는" film이 있으므로 INNER JOIN하면 결측치 부분은 제외되고 조회됨
+-- 그러므로 film_actor.actor_id가 결측치인 정보가 조회되지 않음
+-- outer join을 사용해서 모든 값을 조회 후 WHERE 조건절을 추가해야 함
+~~~
+<br>
 
 문제8번) store 상점 id별 주소 (address, address2, distict) 와 해당 상점이 위치한 city 주소를 알려주세요.
+~~~SQL
+-- 내 풀이
+-- store_id가 결측치인 값들이 모두 조회됨 >> 잘못된 방법
+SELECT s.store_id, a.address, a.address2, a.district, c.city
+FROM address a
+LEFT OUTER JOIN store s ON a.address_id = s.address_id
+LEFT OUTER JOIN city c ON a.city_id = c.city_id;
+~~~
+~~~SQL
+-- 답안풀이
+-- store 테이블에 SELECT문을 날려서 store_id가 결측치인 값들은 조회되지 않음
+SELECT s.store_id, a.address, a.address2, a.district, c.city
+FROM store s
+LEFT OUTER JOIN address a ON s.address_id = a.address_id
+LEFT OUTER JOIN city c ON a.city_id = c.city_id;
+~~~
+<br>
 
 문제9번) 고객의 id 별로 고객의 이름 (first_name, last_name), 이메일, 고객의 주소 (address, district), phone번호, city, country 를 알려주세요.
+~~~SQL
+SELECT DISTINCT c.first_name, c.last_name, c.email, a.address, a.district, country.country
+FROM customer c
+LEFT OUTER JOIN address a ON c.address_id = a.address_id
+LEFT OUTER JOIN city ON a.city_id = city.city_id
+LEFT OUTER JOIN country ON city.country_id = country.country_id;
+~~~
+<br>
 
 문제10번) country 가 china 가 아닌 지역에 사는, 고객의 이름(first_name, last_name)과 , email, phonenumber, country, city 를 알려주세요
+~~~SQL
+SELECT DISTINCT c.first_name, c.last_name, c.email, a.address, a.district, country.country
+FROM customer c
+LEFT OUTER JOIN address a ON c.address_id = a.address_id
+LEFT OUTER JOIN city ON a.city_id = city.city_id
+LEFT OUTER JOIN country ON city.country_id = country.country_id
+WHERE country.country != 'China';
+~~~
+<br>
 
 문제11번) Horror 카테고리 장르에 해당하는 영화의 이름과 description 에 대해서 알려주세요
+~~~SQL
+SELECT f.title, f.description
+FROM film f
+LEFT OUTER JOIN film_category fc ON f.film_id = fc.film_id
+LEFT OUTER JOIN category c ON fc.category_id = c.category_id
+WHERE c.name = 'Horror';
+~~~
+<br>
 
 문제12번) Music 장르이면서, 영화길이가 60~180분 사이에 해당하는 영화의 title, description, length 를 알려주세요.
-
 - 영화 길이가 짧은 순으로 정렬해서 알려주세요.
+~~~SQL
+SELECT f.title, f.description, f.length
+FROM film f
+LEFT OUTER JOIN film_category fc ON f.film_id = fc.film_id
+LEFT OUTER JOIN category c ON fc.category_id = c.category_id
+WHERE c.name = 'Music'
+AND f.length >= 60 AND f.length <= 180
+ORDER BY f.length;
+~~~
+<br>
 
 문제13번) actor 테이블을 이용하여,  배우의 ID, 이름, 성 컬럼에 추가로    'Angels Life' 영화에 나온 영화 배우 여부를 Y , N 으로 컬럼을 추가 표기해주세요.  해당 컬럼은 angelslife_flag로 만들어주세요.
+~~~SQL
+SELECT a.actor_id, a.first_name, a.last_name, CASE WHEN a.actor_id IN (
+	SELECT fa.actor_id
+	FROM film_actor fa
+	INNER JOIN film f ON fa.film_id = f.film_id
+	WHERE f.title = 'Angels Life') THEN 'Y'
+	ELSE 'N'
+	END AS angelslife_flag
+FROM actor a;
+-- 헷갈린다!!! 복잡해복잡해 복복잡잡해
+~~~
+<br>
 
 문제14번) 대여일자가 2005-06-01~ 14일에 해당하는 주문 중에서 , 직원의 이름(이름 성) = 'Mike Hillyer' 이거나  고객의 이름이 (이름 성) ='Gloria Cook'  에 해당 하는 rental 의 모든 정보를 알려주세요.
 
