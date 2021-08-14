@@ -1,9 +1,31 @@
 ## #3
 문제1번) 고객의 기본 정보인, 고객 id, 이름, 성, 이메일과 함께 고객의 주소 address, district, postal_code, phone 번호를 함께 보여주세요.
+~~~SQL
+SELECT c.customer_id, c.first_name, c.last_name, c.email, a.address, a.district, a.postal_code, a.phone
+FROM customer AS c
+INNER JOIN address AS a ON c.address_id = a.address_id;
+~~~
+<br>
 
 문제2번) 고객의  기본 정보인, 고객 id, 이름, 성, 이메일과 함께 고객의 주소 address, district, postal_code, phone , city 를 함께 알려주세요.
+~~~SQL
+SELECT c.customer_id, c.first_name, c.last_name, c.email, a.address, a.district, a.postal_code, a.phone, city.city
+FROM customer AS c
+INNER JOIN address AS a ON c.address_id = a.address_id
+INNER JOIN city ON a.city_id = city.city_id;
+--INNER JOIN을 사용했는데, 여기서 LEFT OUTER JOIN을 사용하는 것과 다른게 없는 것 같음
+~~~
+<br>
 
 문제3번) Lima City에 사는 고객의 이름과, 성, 이메일, phonenumber에 대해서 알려주세요.
+~~~SQL
+SELECT c.first_name, c.last_name, c.email
+FROM customer AS c
+INNER JOIN address AS a ON c.address_id = a.address_id
+INNER JOIN city ON a.city_id = city.city_id
+WHERE city.city = 'Lima';
+~~~
+<br>
 
 문제4번) rental 정보에 추가로, 고객의 이름과, 직원의 이름을 함께 보여주세요.
 
