@@ -152,10 +152,33 @@ FROM actor a;
 문제14번) 대여일자가 2005-06-01~ 14일에 해당하는 주문 중에서 , 직원의 이름(이름 성) = 'Mike Hillyer' 이거나  고객의 이름이 (이름 성) ='Gloria Cook'  에 해당 하는 rental 의 모든 정보를 알려주세요.
 
 - 추가로 직원이름과, 고객이름에 대해서도 fullname 으로 구성해서 알려주세요.
+~~~SQL
+SELECT r.*, 
+	CONCAT(s.first_name, ' ', s.last_name) AS staff_name,
+	CONCAT(c.first_name, ' ', c.last_name) AS customer_name
+FROM rental r
+LEFT OUTER JOIN staff s ON r.staff_id = s.staff_id
+LEFT OUTER JOIN customer c ON r.customer_id = c.customer_id
+WHERE DATE(rental_date) BETWEEN '2005-06-01' AND '2005-06-14'
+AND (s.first_name || ' ' || s.last_name = 'Mike Hillyer'
+	OR c.first_name || ' ' || c.last_name = 'Gloria Cook')
+~~~
+<br>
 
 문제15번) 대여일자가 2005-06-01~ 14일에 해당하는 주문 중에서 , 직원의 이름(이름 성) = 'Mike Hillyer' 에 해당 하는 직원에게  구매하지 않은  rental 의 모든 정보를 알려주세요.
 
 - 추가로 직원이름과, 고객이름에 대해서도 fullname 으로 구성해서 알려주세요.
+~~~SQL
+SELECT r.*, 
+	CONCAT(s.first_name, ' ', s.last_name) AS staff_name,
+	CONCAT(c.first_name, ' ', c.last_name) AS customer_name
+FROM rental r
+LEFT OUTER JOIN staff s ON r.staff_id = s.staff_id
+LEFT OUTER JOIN customer c ON r.customer_id = c.customer_id
+WHERE DATE(rental_date) BETWEEN '2005-06-01' AND '2005-06-14'
+AND s.first_name || ' ' || s.last_name != 'Mike Hillyer'
+~~~
+<br>
 
 ## #4
 문제1번) store 별로 staff는 몇명이 있는지 확인해주세요.
